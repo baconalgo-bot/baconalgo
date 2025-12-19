@@ -1,0 +1,13 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+yfinance==0.2.32
+pandas==2.1.3
+numpy==1.26.2
+TA-Lib==0.4.28
+requests==2.31.0
+python-multipart==0.0.6
+tensorflow==2.15.0
+scikit-learn==1.3.2
+ccxt==4.1.94
+holidays==0.38
+pytz==2023.3

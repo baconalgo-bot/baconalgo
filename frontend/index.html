@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥓 BaconAlgo - Station de Trading Intelligente</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥓</text></svg>">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7931E;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --accent: #0f3460;
+            --success: #00D9FF;
+            --text: #e4e4e4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Promo Banner */
+        .promo-banner {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95em;
+            animation: slideDown 0.5s ease-out;
+            position: sticky;
+            top: 0;
+            z-index: 2000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: sticky;
+            top: 56px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 100px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(180deg); }
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255,107,53,0.2);
+            border: 1px solid var(--primary);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--primary);
+        }
+
+        .hero h1 {
+            font-size: 4em;
+            font-weight: 900;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            color: rgba(228,228,228,0.8);
+            margin-bottom: 40px;
+            font-weight: 400;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .hero-cta .btn {
+            font-size: 1.1em;
+            padding: 16px 40px;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 50px;
+            flex-wrap: wrap;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(228,228,228,0.7);
+            font-size: 0.95em;
+        }
+
+        .hero-feature svg {
+            color: var(--success);
+        }
+
+        /* Problem Section */
+        .problem-section {
+            padding: 100px 30px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.8em;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2em;
+            color: rgba(228,228,228,0.7);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .problems-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .problem-card {
+            background: rgba(255,255,255,0.03);
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,107,53,0.2);
+            transition: all 0.3s;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            background: rgba(255,107,53,0.05);
+        }
+
+        .problem-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .problem-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .problem-description {
+            color: rgba(228,228,228,0.8);
+            line-height: 1.7;
+        }
+
+        /* Solution Section */
+        .solution-section {
+            padding: 100px 30px;
+        }
+
+        .solution-hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .solution-hero h2 {
+            font-size: 3em;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .solution-hero h2 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .features-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.03);
+            padding: 35px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .feature-card:hover::before {
+            opacity: 0.08;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+
+        .feature-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-description {
+            color: rgba(228,228,228,0.8);
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Performance Section */
+        .performance-section {
+            padding: 100px 30px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .performance-table {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .performance-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .performance-table th {
+            background: rgba(255,107,53,0.2);
+            padding: 20px;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .performance-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .performance-table tr:hover {
+            background: rgba(255,107,53,0.05);
+        }
+
+        .profit {
+            color: #00D9FF;
+            font-weight: 700;
+        }
+
+        .loss {
+            color: #ff6b6b;
+            font-weight: 700;
+        }
+
+        .backtest-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .backtest-link:hover {
+            text-decoration: underline;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 30px;
+            text-align: center;
+        }
+
+        .cta-box {
+            max-width: 800px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 60px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255,107,53,0.4);
+        }
+
+        .cta-box h2 {
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .cta-box p {
+            font-size: 1.2em;
+            margin-bottom: 35px;
+            opacity: 0.95;
+        }
+
+        .cta-features {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 35px;
+            flex-wrap: wrap;
+        }
+
+        .cta-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 50px 30px 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(228,228,228,0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-text {
+            color: rgba(228,228,228,0.5);
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .section-title {
+                font-size: 2em;
+            }
+            
+            .performance-table {
+                overflow-x: auto;
+            }
+        }
+
+        /* Checkmark */
+        .checkmark {
+            color: #00D9FF;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+    <!-- Promo Banner -->
+    <div class="promo-banner">
+        🎉 Utilisez le code <strong>ILOVEBACON</strong> pour un accès GRATUIT ! Offre limitée ! 🎉
+    </div>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'">🥓 BaconAlgo</div>
+            <ul class="nav-links">
+                <li><a href="#features">Fonctionnalités</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="pricing.html">Tarifs</a></li>
+                <li><a href="dashboard_ultimate.html">📊 Dashboard</a></li>
+                <li><a href="http://localhost:8000/docs" target="_blank">API</a></li>
+                <li><a href="dashboard_ultimate.html" class="btn btn-primary">Commencer</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tag">✨ Station de Trading Intelligente</div>
+            
+            <h1>
+                Scannez, Analysez & <span>Tradez</span><br>
+                Comme un Pro
+            </h1>
+            
+            <p class="hero-subtitle">
+                Scanneur intelligent, signaux en temps réel, indicateurs propriétaires et 
+                station d'auto-exécution pour traders actifs. Du scalp au long terme, 
+                tout ce dont vous avez besoin à partir de 20$/mois.
+            </p>
+            
+            <div class="hero-cta">
+                <a href="dashboard_ultimate.html" class="btn btn-primary">
+                    🚀 Essayer Gratuitement 7 Jours
+                </a>
+                <a href="pricing.html" class="btn btn-outline">
+                    💎 Voir les Tarifs
+                </a>
+            </div>
+            
+            <div class="hero-features">
+                <div class="hero-feature">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                    Sans carte bancaire pour l'essai gratuit
+                </div>
+                <div class="hero-feature">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                    Annulation en un clic
+                </div>
+                <div class="hero-feature">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                    </svg>
+                    Disponible en CAD et USD
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <h2 class="section-title">Les Problèmes des Traders</h2>
+        <p class="section-subtitle">
+            Si vous vous reconnaissez dans l'un de ces scénarios, BaconAlgo est fait pour vous.
+        </p>
+        
+        <div class="problems-grid">
+            <div class="problem-card">
+                <div class="problem-icon">⏰</div>
+                <h3 class="problem-title">Manque de Temps</h3>
+                <p class="problem-description">
+                    Vous passez plus de temps à analyser les graphiques qu'à trader, 
+                    et vous ratez les meilleures opportunités.
+                </p>
+            </div>
+            
+            <div class="problem-card">
+                <div class="problem-icon">📉</div>
+                <h3 class="problem-title">Performance Incertaine</h3>
+                <p class="problem-description">
+                    Sans backtests ni suivi de performance, impossible de savoir 
+                    si vos stratégies fonctionnent vraiment.
+                </p>
+            </div>
+            
+            <div class="problem-card">
+                <div class="problem-icon">😰</div>
+                <h3 class="problem-title">Trading Émotionnel</h3>
+                <p class="problem-description">
+                    Émotions, hésitations, FOMO : vos trades manuels sont influencés 
+                    par votre psychologie du moment.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="solution-section" id="features">
+        <div class="solution-hero">
+            <h2>
+                <span>BaconAlgo</span> fait tout le travail<br>
+                d'analyse, de sélection et d'exécution pour vous.
+            </h2>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🔍</div>
+                <h3 class="feature-title">Scanneur Multi-Marchés</h3>
+                <p class="feature-description">
+                    Détecte en temps réel les meilleures configurations de marché selon votre style : 
+                    scalp, day trading, swing. US stocks, Canadian equities, Futures, Crypto.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Signaux Structurés</h3>
+                <p class="feature-description">
+                    Recevez des signaux structurés avec entrée, stop-loss et objectifs. 
+                    Chaque signal est accompagné de son niveau de confluence (96%+ de précision).
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Indicateurs Propriétaires</h3>
+                <p class="feature-description">
+                    Accédez à nos indicateurs propriétaires et à des backtests détaillés : 
+                    AVWAP Multi-Timeframe, RSI avancé, Volume Profile, Order Flow Analysis.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Station Auto-Trade</h3>
+                <p class="feature-description">
+                    Centralisez vos signaux et laissez la Station trader pour vous sur 
+                    Interactive Brokers et Bitget. Exécution automatique basée sur l'IA.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3 class="feature-title">Alertes Discord & Mobile</h3>
+                <p class="feature-description">
+                    Notifications instantanées via Discord webhooks et notifications push mobile. 
+                    Ne ratez plus jamais une opportunité.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3 class="feature-title">Machine Learning</h3>
+                <p class="feature-description">
+                    LSTM Neural Networks + Random Forest pour des prédictions ultra-précises. 
+                    Analyse de millions de points de données en temps réel.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💎</div>
+                <h3 class="feature-title">Smart Money Concepts</h3>
+                <p class="feature-description">
+                    Fair Value Gaps (FVG), Order Blocks (OB), Liquidity Zones. 
+                    Tradez comme les institutions avec l'analyse institutionnelle.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📰</div>
+                <h3 class="feature-title">News & Halts Tracker</h3>
+                <p class="feature-description">
+                    Suivi en temps réel des nouvelles et des arrêts de trading. 
+                    Restez informé des événements qui font bouger les marchés.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Section -->
+    <section class="performance-section" id="performance">
+        <h2 class="section-title">Performance Récente</h2>
+        <p class="section-subtitle">
+            Voici un aperçu des récents signaux et backtests publiés sur la plateforme. 
+            Tous les membres de la Station ont accès à l'historique complet.
+        </p>
+        
+        <div class="performance-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Marché</th>
+                        <th>Type</th>
+                        <th>Setup</th>
+                        <th>Résultat</th>
+                        <th>Backtest</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-12-16</td>
+                        <td>TSLA</td>
+                        <td>Day</td>
+                        <td>Long $462.13</td>
+                        <td class="profit">+2.4%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-16</td>
+                        <td>PLTR</td>
+                        <td>Swing</td>
+                        <td>Long $76.02</td>
+                        <td class="profit">+5.1%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-15</td>
+                        <td>BTC-USD</td>
+                        <td>Scalp</td>
+                        <td>Short 103,500</td>
+                        <td class="profit">+1.8%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-15</td>
+                        <td>SPY</td>
+                        <td>Day</td>
+                        <td>Long $607.34</td>
+                        <td class="profit">+0.9%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-14</td>
+                        <td>NQ=F</td>
+                        <td>Day</td>
+                        <td>Long 16,450</td>
+                        <td class="profit">+1.5%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                    <tr>
+                        <td>2025-12-14</td>
+                        <td>AMD</td>
+                        <td>Swing</td>
+                        <td>Long $134.58</td>
+                        <td class="profit">+3.2%</td>
+                        <td><a href="dashboard_ultimate.html" class="backtest-link">Voir backtest</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <p style="color: rgba(228,228,228,0.7); margin-bottom: 20px;">
+                <strong>BaconAlgo</strong>, c'est aussi une communauté active de traders qui 
+                partagent leurs setups, posent des questions et progressent ensemble.
+            </p>
+            <a href="dashboard_ultimate.html" class="btn btn-primary">
+                📊 Voir Plus de Résultats
+            </a>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="cta-box">
+            <h2>Prêt à Transformer Votre Trading ?</h2>
+            <p>
+                Essayez la Station BaconAlgo gratuitement pendant 7 jours. 
+                Accès complet aux signaux, au scanneur, aux indicateurs et à l'auto-exécution.
+            </p>
+            
+            <div class="cta-features">
+                <div class="cta-feature">
+                    <span class="checkmark">✓</span> Disponible en CAD et USD
+                </div>
+                <div class="cta-feature">
+                    <span class="checkmark">✓</span> Accès immédiat à la Station
+                </div>
+                <div class="cta-feature">
+                    <span class="checkmark">✓</span> Sans engagement
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+                <a href="dashboard_ultimate.html" class="btn" style="background: white; color: var(--primary); font-size: 1.2em; box-shadow: 0 5px 20px rgba(0,0,0,0.3);">
+                    🚀 Essayer 7 Jours Gratuits
+                </a>
+                <a href="pricing.html" class="btn btn-outline" style="border-color: white; color: white; font-size: 1.2em;">
+                    💎 Voir les Plans
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="margin-bottom: 25px;">🥓 BaconAlgo</div>
+            
+            <div class="footer-links">
+                <a href="index.html">Accueil</a>
+                <a href="pricing.html">Tarifs</a>
+                <a href="dashboard_ultimate.html">Dashboard</a>
+                <a href="http://localhost:8000/docs" target="_blank">API Docs</a>
+                <a href="#">Politique de Confidentialité</a>
+                <a href="#">Conditions d'Utilisation</a>
+                <a href="#">Contact</a>
+            </div>
+            
+            <p class="footer-text">
+                © 2025 BaconAlgo Saint-Graal. Construit par des traders, pour des traders. 🥓<br>
+                Trading comporte des risques. Tradez de manière responsable.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Mobile menu toggle (à ajouter si nécessaire)
+        const createMobileMenu = () => {
+            // Code pour menu mobile si besoin
+        };
+    </script>
+</body>
+</html>

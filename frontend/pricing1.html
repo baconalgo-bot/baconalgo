@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plans & Tarifs – BaconAlgo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b35;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #ff6b35;
+        }
+        
+        /* Pricing Header */
+        .pricing-header {
+            text-align: center;
+            padding: 60px 0;
+        }
+        
+        .pricing-header h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pricing-header p {
+            font-size: 18px;
+            color: #aaa;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        /* Currency Toggle */
+        .currency-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 30px 0;
+        }
+        
+        .currency-btn {
+            padding: 10px 30px;
+            border: 2px solid #ff6b35;
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .currency-btn.active {
+            background: #ff6b35;
+        }
+        
+        /* Pricing Grid */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+        
+        .pricing-card {
+            background: #151515;
+            border: 2px solid #222;
+            border-radius: 16px;
+            padding: 40px;
+            position: relative;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b35;
+        }
+        
+        .pricing-card.recommended {
+            border-color: #ff6b35;
+            background: linear-gradient(135deg, rgba(255,107,53,0.1) 0%, rgba(255,140,66,0.1) 100%);
+        }
+        
+        .badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: #ff6b35;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .pricing-card h3 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: #ff6b35;
+        }
+        
+        .price {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        
+        .price small {
+            font-size: 18px;
+            color: #aaa;
+        }
+        
+        .trial-note {
+            color: #4caf50;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 30px 0;
+        }
+        
+        .pricing-card li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .pricing-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            display: block;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: #ff6b35;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #ff8c42;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid #ff6b35;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #ff6b35;
+        }
+        
+        /* Comparison Table */
+        .comparison-section {
+            margin: 80px 0;
+            padding: 40px;
+            background: #151515;
+            border-radius: 16px;
+        }
+        
+        .comparison-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #222;
+        }
+        
+        th {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        /* FAQ Section */
+        .faq-section {
+            margin: 80px 0;
+        }
+        
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 36px;
+        }
+        
+        .faq-item {
+            background: #151515;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #222;
+        }
+        
+        .faq-item h3 {
+            color: #ff6b35;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .faq-item p {
+            color: #aaa;
+            line-height: 1.8;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            border-top: 1px solid #222;
+            color: #888;
+        }
+        
+        .slogan {
+            font-size: 24px;
+            color: #ff6b35;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .pricing-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">🥓 BaconAlgo</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="pricing.html">Tarifs</a></li>
+                    <li><a href="https://webacon.streamlit.app">Station</a></li>
+                    <li><a href="index.html#community">Communauté</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Pricing Header -->
+    <section class="pricing-header">
+        <div class="container">
+            <h1>Choisissez votre niveau BaconAlgo</h1>
+            <p>Tous les plans payants incluent un essai gratuit de 7 jours. Annulation en un clic avant la fin de l'essai. Disponible en CAD et USD.</p>
+            
+            <div class="currency-toggle">
+                <button class="currency-btn active" onclick="switchCurrency('usd')">USD 🇺🇸</button>
+                <button class="currency-btn" onclick="switchCurrency('cad')">CAD 🇨🇦</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Grid -->
+    <section class="container">
+        <div class="pricing-grid">
+            <!-- Free Plan -->
+            <div class="pricing-card">
+                <h3>🆓 Free / Donation</h3>
+                <div class="price">
+                    Donation<br>
+                    <small>volontaire</small>
+                </div>
+                <ul>
+                    <li>1–2 signaux gratuits par soir</li>
+                    <li>Quelques scans publics du jour</li>
+                    <li>Accès aux backtests publics</li>
+                    <li>Discord public</li>
+                    <li>YouTube lives ouverts</li>
+                </ul>
+                <a href="#" class="btn btn-secondary">Commencer avec une donation</a>
+            </div>
+
+            <!-- Indicator Plan -->
+            <div class="pricing-card">
+                <h3>📊 Bacon Buy & Sell Indicator</h3>
+                <div class="price">
+                    <span class="price-usd">20 $</span>
+                    <span class="price-cad" style="display:none;">27 $</span><br>
+                    <small>par mois</small>
+                </div>
+                <p class="trial-note">✅ Inclut un essai gratuit de 7 jours</p>
+                <ul>
+                    <li>Indicateur propriétaire Bacon</li>
+                    <li>Compatible MT5, TradingView, Station</li>
+                    <li>Signaux d'entrée et sortie en temps réel</li>
+                    <li>Backtests et statistiques</li>
+                    <li>Discord "Indicators"</li>
+                    <li>Tutoriels d'installation</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Essayer 7 jours gratuit</a>
+            </div>
+
+            <!-- Scanner Plan -->
+            <div class="pricing-card">
+                <h3>🔍 Bacon Scanner</h3>
+                <div class="price">
+                    <span class="price-usd">30 $</span>
+                    <span class="price-cad" style="display:none;">40 $</span><br>
+                    <small>par mois</small>
+                </div>
+                <p class="trial-note">✅ Inclut un essai gratuit de 7 jours</p>
+                <ul>
+                    <li>Scanneur Scalp / Day / Swing / LT</li>
+                    <li>Filtres par marché et volatilité</li>
+                    <li>Score de confiance BaconAlgo</li>
+                    <li>Alertes temps réel</li>
+                    <li>Discord "Scanner Pro"</li>
+                    <li>Support prioritaire</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Essayer 7 jours gratuit</a>
+            </div>
+
+            <!-- Station Plan (Recommended) -->
+            <div class="pricing-card recommended">
+                <span class="badge">⭐ RECOMMANDÉ</span>
+                <h3>🤖 Bacon Station Auto-Trade IB</h3>
+                <div class="price">
+                    <span class="price-usd">50 $</span>
+                    <span class="price-cad" style="display:none;">67 $</span><br>
+                    <small>par mois</small>
+                </div>
+                <p class="trial-note">✅ Inclut un essai gratuit de 7 jours</p>
+                <ul>
+                    <li>Indicator + Scanner inclus</li>
+                    <li>Auto-exécution avec IB</li>
+                    <li>Configuration règles de risque</li>
+                    <li>Dashboard temps réel complet</li>
+                    <li>Journal de trades avec tags</li>
+                    <li>Backtests & stats par stratégie</li>
+                    <li>Discord salons privés complets</li>
+                    <li>Support prioritaire + lives privés</li>
+                </ul>
+                <a href="#" class="btn btn-primary">Essayer la Station 7 jours gratuit</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison-section container">
+        <h2>Tableau comparatif</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Plan</th>
+                    <th>Prix (USD/CAD)</th>
+                    <th>Indicator</th>
+                    <th>Scanner</th>
+                    <th>Station IB</th>
+                    <th>Essai 7j</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Free / Donation</td>
+                    <td>Donation</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                </tr>
+                <tr>
+                    <td>Bacon Indicator</td>
+                    <td><span class="price-usd">20$</span><span class="price-cad" style="display:none;">27$</span></td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>✅</td>
+                </tr>
+                <tr>
+                    <td>Bacon Scanner</td>
+                    <td><span class="price-usd">30$</span><span class="price-cad" style="display:none;">40$</span></td>
+                    <td>❌</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>✅</td>
+                </tr>
+                <tr style="background: rgba(255,107,53,0.1);">
+                    <td><strong>Bacon Station IB</strong></td>
+                    <td><strong><span class="price-usd">50$</span><span class="price-cad" style="display:none;">67$</span></strong></td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="text-align: center; margin-top: 30px; color: #aaa;">
+            💡 <strong>Note:</strong> La Station Auto-Trade IB inclut l'indicateur + le scanner, c'est le package complet.
+        </p>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section container">
+        <h2>Questions fréquentes</h2>
+        
+        <div class="faq-item">
+            <h3>Puis-je annuler avant la fin de l'essai gratuit ?</h3>
+            <p>Oui, vous pouvez annuler en un clic depuis votre compte. Si vous annulez avant la fin des 7 jours, vous ne serez jamais facturé.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Que se passe-t-il après les 7 jours d'essai ?</h3>
+            <p>Si vous ne faites rien, l'abonnement se poursuit automatiquement au tarif mensuel choisi (CAD ou USD). Vous pouvez annuler à tout moment.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Puis-je changer de plan ?</h3>
+            <p>Oui, vous pouvez passer d'un plan à l'autre à tout moment depuis votre compte. Le changement est immédiat.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Les prix sont-ils en CAD ou USD ?</h3>
+            <p>Vous choisissez la devise lors de l'inscription. Les deux devises sont acceptées.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Est-ce que la Station fonctionne avec mon broker ?</h3>
+            <p>La Bacon Station Auto-Trade est conçue pour fonctionner avec Interactive Brokers (IB). Vous pouvez aussi tester en mode démo sans connecter de compte réel.</p>
+        </div>
+        
+        <div class="faq-item">
+            <h3>Puis-je utiliser l'indicateur sur plusieurs plateformes ?</h3>
+            <p>Oui, le Bacon Buy & Sell Indicator est compatible MT5, TradingView et la Station BaconAlgo.</p>
+        </div>
+    </section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <!-- Disclaimer légal -->
+        <div style="background: rgba(255,107,53,0.1); border: 1px solid #ff6b35; border-radius: 12px; padding: 30px; margin-bottom: 40px; text-align: left;">
+            <h3 style="color: #ff6b35; margin-bottom: 15px; font-size: 18px;">⚠️ Avertissement sur les risques</h3>
+            <p style="font-size: 14px; color: #aaa; line-height: 1.8;">
+                <strong>BaconAlgo est une plateforme éducative et un outil d'analyse de marché.</strong> Le trading de devises, crypto-monnaies, indices et actions comporte un niveau élevé de risque et peut ne pas convenir à tous les investisseurs. Vous pourriez perdre une partie ou la totalité de votre investissement initial. Ne tradez jamais avec de l'argent que vous ne pouvez pas vous permettre de perdre.
+                <br><br>
+                Les performances passées ne garantissent pas les résultats futurs. Les signaux, indicateurs et analyses fournis par BaconAlgo sont à titre informatif uniquement et ne constituent pas des conseils financiers, d'investissement ou de trading. Vous êtes seul responsable de vos décisions de trading et de leurs conséquences.
+                <br><br>
+                En utilisant BaconAlgo, vous reconnaissez et acceptez ces risques. BaconAlgo, ses créateurs et contributeurs ne peuvent être tenus responsables de pertes financières résultant de l'utilisation de cette plateforme.
+                <br><br>
+                <strong>Consultez un conseiller financier indépendant avant de prendre toute décision d'investissement.</strong>
+            </p>
+        </div>
+        
+        <!-- Footer standard -->
+        <p>&copy; 2025 BaconAlgo. Tous droits réservés.</p>
+        <p style="margin: 10px 0;">
+            <a href="#" style="color: #888; margin: 0 10px;">Conditions d'utilisation</a> • 
+            <a href="#" style="color: #888; margin: 0 10px;">Politique de confidentialité</a> • 
+            <a href="mailto:contact@baconalgo.com" style="color: #888; margin: 0 10px;">Contact</a>
+        </p>
+        <p class="slogan">Make Bacon Great Again! 🥓</p>
+    </div>
+</footer>
+
+    <script>
+        function switchCurrency(currency) {
+            const usdElements = document.querySelectorAll('.price-usd');
+            const cadElements = document.querySelectorAll('.price-cad');
+            const buttons = document.querySelectorAll('.currency-btn');
+            
+            if (currency === 'usd') {
+                usdElements.forEach(el => el.style.display = 'inline');
+                cadElements.forEach(el => el.style.display = 'none');
+                buttons[0].classList.add('active');
+                buttons[1].classList.remove('active');
+            } else {
+                usdElements.forEach(el => el.style.display = 'none');
+                cadElements.forEach(el => el.style.display = 'inline');
+                buttons[0].classList.remove('active');
+                buttons[1].classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

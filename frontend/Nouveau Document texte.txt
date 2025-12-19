@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🥓 BaconAlgo Test</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0a0e27;
+            color: white;
+            padding: 20px;
+        }
+        .signal {
+            background: rgba(0,255,136,0.1);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #00ff88;
+        }
+        button {
+            background: #00ff88;
+            color: black;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>🥓 BaconAlgo - Test Simple</h1>
+    
+    <button onclick="scan()">🔍 SCAN NOW</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function scan() {
+            document.getElementById('results').innerHTML = '<p>Scanning...</p>';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/scan');
+                const data = await response.json();
+                
+                let html = '<h2>✅ Found ' + data.signals.length + ' signals!</h2>';
+                
+                data.signals.forEach(signal => {
+                    html += `
+                        <div class="signal">
+                            <h3>${signal.symbol}</h3>
+                            <p>Price: $${signal.price.toFixed(2)}</p>
+                            <p>Direction: ${signal.direction}</p>
+                            <p>Score: ${signal.score}/100</p>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('results').innerHTML = html;
+            } catch (error) {
+                document.getElementById('results').innerHTML = '<p>Error: ' + error + '</p>';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥓 Bacon Station - Ultimate Trading Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gradient-to-br from-gray-900 via-black to-gray-900 text-white min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-black/50 backdrop-blur-lg border-b border-orange-500/20 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <span class="text-4xl">🥓</span>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-orange-500 to-red-600 bg-clip-text text-transparent">
+                    BACON STATION
+                </h1>
+            </div>
+            <div class="flex space-x-4">
+                <a href="pricing.html" class="hover:text-orange-500 transition">Pricing</a>
+                <button onclick="showLogin()" class="bg-orange-600 hover:bg-orange-700 px-6 py-2 rounded-lg transition">
+                    Login
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-32 pb-20 px-6">
+        <div class="max-w-6xl mx-auto text-center">
+            <h1 class="text-6xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-orange-500 via-red-500 to-orange-600 bg-clip-text text-transparent">
+                THE ULTIMATE<br/>TRADING PLATFORM
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                Advanced trading tools powered by AI, Machine Learning, Order Flow Analysis, and real-time market intelligence.
+            </p>
+            
+            <!-- Features Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mb-12">
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h3 class="text-xl font-bold mb-2">Advanced Charts</h3>
+                    <p class="text-gray-400">TradingView integration with custom indicators</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">🤖</div>
+                    <h3 class="text-xl font-bold mb-2">AI Signals</h3>
+                    <p class="text-gray-400">Machine learning powered trading signals</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">📈</div>
+                    <h3 class="text-xl font-bold mb-2">Order Flow</h3>
+                    <p class="text-gray-400">ATAS integration for order block detection</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">🔔</div>
+                    <h3 class="text-xl font-bold mb-2">Real-time Alerts</h3>
+                    <p class="text-gray-400">Discord + Mobile notifications</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">📰</div>
+                    <h3 class="text-xl font-bold mb-2">Market News</h3>
+                    <p class="text-gray-400">Real-time news and halts tracker</p>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-900/20 to-red-900/20 p-6 rounded-xl border border-orange-500/30 hover:border-orange-500 transition">
+                    <div class="text-4xl mb-4">💰</div>
+                    <h3 class="text-xl font-bold mb-2">Multi-Broker</h3>
+                    <p class="text-gray-400">Interactive Brokers + Bitget support</p>
+                </div>
+            </div>
+
+            <button onclick="showRegister()" class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white px-12 py-4 rounded-xl text-xl font-bold transition transform hover:scale-105 shadow-lg shadow-orange-500/50">
+                🚀 GET STARTED - FREE FOR 1 MONTH
+            </button>
+            <p class="text-gray-500 mt-4">Use code <span class="text-orange-500 font-bold">ILOVEBACON</span> for free access</p>
+        </div>
+    </section>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-gray-900 border border-orange-500/30 rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Login</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="email" id="loginEmail" placeholder="Email" required
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                
+                <input type="password" id="loginPassword" placeholder="Password" required
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                
+                <button type="submit" class="w-full bg-orange-600 hover:bg-orange-700 py-3 rounded-lg font-bold transition">
+                    Login
+                </button>
+            </form>
+            
+            <p class="text-center text-gray-500 mt-4">
+                Don't have an account? 
+                <button onclick="showRegister()" class="text-orange-500 hover:text-orange-400">Register</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="registerModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+        <div class="bg-gray-900 border border-orange-500/30 rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold">Register</h2>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <form onsubmit="handleRegister(event)" class="space-y-4">
+                <input type="email" id="registerEmail" placeholder="Email" required
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                
+                <input type="password" id="registerPassword" placeholder="Password (min 6 characters)" required minlength="6"
+                    class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                
+                <div class="bg-orange-900/20 border border-orange-500/30 rounded-lg p-4">
+                    <label class="block text-sm text-gray-400 mb-2">Promo Code (Optional)</label>
+                    <input type="text" id="promoCode" placeholder="ILOVEBACON" 
+                        class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:border-orange-500 focus:outline-none">
+                    <p class="text-xs text-orange-500 mt-2">🥓 Use ILOVEBACON for 1 month free access!</p>
+                </div>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 py-3 rounded-lg font-bold transition">
+                    Create Account
+                </button>
+            </form>
+            
+            <p class="text-center text-gray-500 mt-4">
+                Already have an account? 
+                <button onclick="showLogin()" class="text-orange-500 hover:text-orange-400">Login</button>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration (YOU'LL ADD YOUR KEYS LATER)
+        const SUPABASE_URL = 'https://vnscwjgaboiefxjlosbp.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZuc2N3amdhYm9pZWZ4amxvc2JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjU3ODE4OTYsImV4cCI6MjA4MTM1Nzg5Nn0.XY_6Ps6926zI9o_7VLYjZHR0VM2-6ZxDz70EU1oxXkw';
+        
+        let supabase;
+        if (SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        }
+
+        function showLogin() {
+            document.getElementById('loginModal').classList.remove('hidden');
+            document.getElementById('registerModal').classList.add('hidden');
+        }
+
+        function showRegister() {
+            document.getElementById('registerModal').classList.remove('hidden');
+            document.getElementById('loginModal').classList.add('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('loginModal').classList.add('hidden');
+            document.getElementById('registerModal').classList.add('hidden');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (!supabase) {
+                alert('🥓 Demo mode - Supabase not configured yet!\nRedirecting to dashboard...');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+                
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const promoCode = document.getElementById('promoCode').value;
+
+            // Check promo code
+            if (promoCode.toUpperCase() === 'ILOVEBACON') {
+                alert('🥓🔥 PROMO CODE ACCEPTED!\nYou get 1 MONTH FREE ACCESS!\nWelcome to Bacon Station!');
+            }
+
+            if (!supabase) {
+                alert('🥓 Demo mode - Account created!\nRedirecting to dashboard...');
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            try {
+                const { data, error } = await supabase.auth.signUp({
+                    email: email,
+                    password: password,
+                    options: {
+                        data: {
+                            promo_code: promoCode.toUpperCase(),
+                            free_trial: promoCode.toUpperCase() === 'ILOVEBACON'
+                        }
+                    }
+                });
+
+                if (error) throw error;
+                
+                alert('Account created! Check your email to confirm.');
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Check if user is already logged in
+        if (supabase) {
+            supabase.auth.getSession().then(({ data: { session } }) => {
+                if (session) {
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

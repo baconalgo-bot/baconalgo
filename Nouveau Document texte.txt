@@ -1,0 +1,19 @@
+# Discord Webhook Configuration
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/1450225600790003754/EgHXR5gHkAz389WwF3_wJl-aoIkPP-5BVFp7GxqCVp7MHbUEPWS_WI2WtaUw4pO1whZa
+
+# API Configuration
+API_HOST=0.0.0.0
+API_PORT=8000
+DEBUG_MODE=True
+
+# Trading Configuration
+MIN_VOLUME_RATIO=1.5
+MIN_CONFLUENCES=2
+ENABLE_ML=True
+ENABLE_DISCORD=True
+
+# Market Settings
+SCAN_US_STOCKS=True
+SCAN_CANADIAN=True
+SCAN_FUTURES=True
+SCAN_CRYPTO=True

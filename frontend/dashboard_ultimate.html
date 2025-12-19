@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥓 BaconAlgo Saint-Graal - Ultimate Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            font-size: 0.9em;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        /* Controls */
+        .controls {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95em;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-us {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-ca {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-futures {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-crypto {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .btn-refresh {
+            background: #10b981;
+            color: white;
+        }
+
+        .auto-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+        }
+
+        /* Filter */
+        .filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select, input {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 0.9em;
+        }
+
+        /* Results Grid */
+        .results {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        /* Signal Card */
+        .signal-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border-left: 5px solid;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .signal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .signal-ultra {
+            border-left-color: #ff6b6b;
+            background: rgba(255,107,107,0.1);
+        }
+
+        .signal-high {
+            border-left-color: #ffd93d;
+            background: rgba(255,217,61,0.1);
+        }
+
+        .signal-medium {
+            border-left-color: #6bcf7f;
+            background: rgba(107,207,127,0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .symbol {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .signal-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.85em;
+        }
+
+        .ultra-badge {
+            background: #ff6b6b;
+        }
+
+        .high-badge {
+            background: #ffd93d;
+            color: #000;
+        }
+
+        .medium-badge {
+            background: #6bcf7f;
+            color: #000;
+        }
+
+        .price-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .price {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .change {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .positive {
+            color: #6bcf7f;
+        }
+
+        .negative {
+            color: #ff6b6b;
+        }
+
+        /* Metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .metric {
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Confluences */
+        .confluences {
+            margin-top: 15px;
+        }
+
+        .confluences-title {
+            font-size: 0.9em;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+
+        .confluence-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .confluence-tag {
+            padding: 5px 12px;
+            background: rgba(102,126,234,0.3);
+            border-radius: 15px;
+            font-size: 0.85em;
+            border: 1px solid rgba(102,126,234,0.5);
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.5em;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            opacity: 0.5;
+        }
+
+        .empty-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1f3a;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            font-size: 2em;
+            cursor: pointer;
+            color: #ff6b6b;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">🥓 BaconAlgo Saint-Graal</div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-label">Scanned</div>
+                    <div class="stat-value" id="totalScanned">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Signals</div>
+                    <div class="stat-value" id="signalsFound">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Last Update</div>
+                    <div class="stat-value" id="lastUpdate">--:--</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <button class="btn btn-primary" onclick="scanMarket('all')">
+            🌍 Scan All Markets
+        </button>
+        <button class="btn btn-us" onclick="scanMarket('us')">
+            🇺🇸 US Stocks
+        </button>
+        <button class="btn btn-ca" onclick="scanMarket('ca')">
+            🇨🇦 Canadian
+        </button>
+        <button class="btn btn-futures" onclick="scanMarket('futures')">
+            📊 Futures
+        </button>
+        <button class="btn btn-crypto" onclick="scanMarket('crypto')">
+            ₿ Crypto
+        </button>
+        
+        <div class="filter">
+            <select id="filterSignal" onchange="applyFilters()">
+                <option value="all">All Signals</option>
+                <option value="ultra">🔥 Ultra Only</option>
+                <option value="high">⭐ High Only</option>
+                <option value="medium">✅ Medium Only</option>
+            </select>
+            
+            <input type="text" id="searchSymbol" placeholder="Search symbol..." oninput="applyFilters()">
+        </div>
+        
+        <div class="auto-refresh">
+            <label>
+                <input type="checkbox" id="autoRefresh" onchange="toggleAutoRefresh()">
+                Auto-refresh (30s)
+            </label>
+            <button class="btn btn-refresh" onclick="refreshData()">
+                🔄 Refresh
+            </button>
+        </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>🥓 Click a button to start scanning...</div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Symbol Details</h2>
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000';
+        let allResults = [];
+        let autoRefreshInterval = null;
+        let currentMarket = 'all';
+
+        // Scan Market
+        async function scanMarket(market) {
+            currentMarket = market;
+            const resultsDiv = document.getElementById('results');
+            
+            resultsDiv.innerHTML = '<div class="loading"><div class="spinner"></div><div>🔍 Scanning markets... Please wait...</div></div>';
+            
+            try {
+                const endpoint = market === 'all' ? '/api/scan' : `/api/scan/${market}`;
+                const response = await fetch(API_BASE + endpoint);
+                const data = await response.json();
+                
+                allResults = data.results || [];
+                
+                // Update stats
+                document.getElementById('totalScanned').textContent = data.total_scanned || allResults.length;
+                document.getElementById('signalsFound').textContent = allResults.length;
+                updateLastUpdate();
+                
+                displayResults(allResults);
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">❌</div>
+                        <h2>Error: ${error.message}</h2>
+                        <p>Make sure the backend is running on port 8000</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display Results
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            
+            if (!results || results.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">😴</div>
+                        <h2>No signals found</h2>
+                        <p>Try another market or adjust your criteria</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            results.forEach(signal => {
+                const signalType = signal.signal.includes('ULTRA') ? 'ultra' : 
+                                  signal.signal.includes('HIGH') ? 'high' : 'medium';
+                
+                const badgeClass = signalType === 'ultra' ? 'ultra-badge' : 
+                                  signalType === 'high' ? 'high-badge' : 'medium-badge';
+                
+                const changeClass = signal.change_1d >= 0 ? 'positive' : 'negative';
+                const changeSign = signal.change_1d >= 0 ? '+' : '';
+                
+                html += `
+                    <div class="signal-card signal-${signalType}" onclick='showDetails(${JSON.stringify(signal).replace(/'/g, "&apos;")})'>
+                        <div class="card-header">
+                            <div class="symbol">${signal.symbol}</div>
+                            <div class="signal-badge ${badgeClass}">${signal.signal}</div>
+                        </div>
+                        
+                        <div class="price-section">
+                            <div class="price">$${signal.price.toFixed(2)}</div>
+                            <div class="change ${changeClass}">
+                                ${changeSign}${signal.change_1d.toFixed(2)}%
+                            </div>
+                        </div>
+                        
+                        <div class="metrics">
+                            <div class="metric">
+                                <div class="metric-label">RSI</div>
+                                <div class="metric-value">${signal.rsi.toFixed(1)}</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Volume</div>
+                                <div class="metric-value">${signal.volume_ratio.toFixed(1)}x</div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">5D Change</div>
+                                <div class="metric-value ${signal.change_5d >= 0 ? 'positive' : 'negative'}">
+                                    ${signal.change_5d >= 0 ? '+' : ''}${signal.change_5d.toFixed(2)}%
+                                </div>
+                            </div>
+                            <div class="metric">
+                                <div class="metric-label">Confluences</div>
+                                <div class="metric-value">🔥 ${signal.confluence_count}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="confluences">
+                            <div class="confluences-title">Signals:</div>
+                            <div class="confluence-tags">
+                                ${signal.confluences.map(c => `<div class="confluence-tag">${c}</div>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // Show Details Modal
+        function showDetails(signal) {
+            const modal = document.getElementById('detailModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            
+            modalTitle.textContent = `${signal.symbol} - Detailed Analysis`;
+            
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <h3>Price Information</h3>
+                    <p><strong>Current Price:</strong> $${signal.price.toFixed(2)}</p>
+                    <p><strong>1D Change:</strong> ${signal.change_1d >= 0 ? '+' : ''}${signal.change_1d.toFixed(2)}%</p>
+                    <p><strong>5D Change:</strong> ${signal.change_5d >= 0 ? '+' : ''}${signal.change_5d.toFixed(2)}%</p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Technical Indicators</h3>
+                    <p><strong>RSI:</strong> ${signal.rsi.toFixed(2)}</p>
+                    <p><strong>AVWAP 5D:</strong> $${signal.avwap_5d ? signal.avwap_5d.toFixed(2) : 'N/A'}</p>
+                    <p><strong>AVWAP 13D:</strong> $${signal.avwap_13d ? signal.avwap_13d.toFixed(2) : 'N/A'}</p>
+                    <p><strong>AVWAP 21D:</strong> $${signal.avwap_21d ? signal.avwap_21d.toFixed(2) : 'N/A'}</p>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h3>Volume Analysis</h3>
+                    <p><strong>Current Volume:</strong> ${signal.volume.toLocaleString()}</p>
+                    <p><strong>Volume Ratio:</strong> ${signal.volume_ratio.toFixed(2)}x average</p>
+                </div>
+                
+                <div>
+                    <h3>Confluences (${signal.confluence_count})</h3>
+                    <ul style="list-style-position: inside;">
+                        ${signal.confluences.map(c => `<li>${c}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin-top: 20px; padding: 15px; background: rgba(102,126,234,0.2); border-radius: 10px;">
+                    <strong>⚠️ Trading Recommendation:</strong><br>
+                    ${getRecommendation(signal)}
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Get Recommendation
+        function getRecommendation(signal) {
+            if (signal.confluence_count >= 4) {
+                return "Strong signal! Consider entry with proper risk management.";
+            } else if (signal.confluence_count >= 3) {
+                return "Good setup. Wait for additional confirmation.";
+            } else {
+                return "Moderate signal. Use smaller position size and tight stops.";
+            }
+        }
+
+        // Close Modal
+        function closeModal() {
+            document.getElementById('detailModal').style.display = 'none';
+        }
+
+        // Apply Filters
+        function applyFilters() {
+            const signalFilter = document.getElementById('filterSignal').value;
+            const searchTerm = document.getElementById('searchSymbol').value.toUpperCase();
+            
+            let filtered = allResults;
+            
+            // Filter by signal type
+            if (signalFilter !== 'all') {
+                filtered = filtered.filter(s => s.signal.toLowerCase().includes(signalFilter));
+            }
+            
+            // Filter by search term
+            if (searchTerm) {
+                filtered = filtered.filter(s => s.symbol.includes(searchTerm));
+            }
+            
+            displayResults(filtered);
+        }
+
+        // Toggle Auto Refresh
+        function toggleAutoRefresh() {
+            const checkbox = document.getElementById('autoRefresh');
+            
+            if (checkbox.checked) {
+                autoRefreshInterval = setInterval(() => {
+                    scanMarket(currentMarket);
+                }, 30000); // 30 seconds
+            } else {
+                if (autoRefreshInterval) {
+                    clearInterval(autoRefreshInterval);
+                    autoRefreshInterval = null;
+                }
+            }
+        }
+
+        // Refresh Data
+        function refreshData() {
+            scanMarket(currentMarket);
+        }
+
+        // Update Last Update Time
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastUpdate').textContent = timeString;
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('detailModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>

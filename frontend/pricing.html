@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥓 Tarifs - BaconAlgo Station</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥓</text></svg>">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #F7931E;
+            --dark: #1a1a2e;
+            --darker: #16213e;
+            --accent: #0f3460;
+            --success: #00D9FF;
+            --text: #e4e4e4;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--darker) 100%);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: var(--primary);
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1em;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        /* Hero */
+        .pricing-hero {
+            padding: 100px 30px 80px;
+            text-align: center;
+        }
+
+        .pricing-hero h1 {
+            font-size: 3.5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .pricing-hero h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pricing-hero p {
+            font-size: 1.2em;
+            color: rgba(228,228,228,0.8);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .hero-features {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .hero-feature {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(228,228,228,0.8);
+            font-weight: 500;
+        }
+
+        .checkmark {
+            color: var(--success);
+            font-weight: 900;
+        }
+
+        /* Pricing Cards */
+        .pricing-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 30px 100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            padding: 40px 35px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 50px rgba(255,107,53,0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            background: rgba(255,107,53,0.05);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-10px);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: -15px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            box-shadow: 0 5px 15px rgba(255,107,53,0.4);
+        }
+
+        .plan-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .plan-description {
+            color: rgba(228,228,228,0.7);
+            margin-bottom: 25px;
+            min-height: 50px;
+        }
+
+        .plan-price {
+            font-size: 3em;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .plan-price span {
+            font-size: 0.4em;
+            color: rgba(228,228,228,0.6);
+            font-weight: 500;
+        }
+
+        .trial-notice {
+            background: rgba(0,217,255,0.1);
+            border: 1px solid var(--success);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--success);
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 30px 0;
+        }
+
+        .plan-features li {
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            color: var(--success);
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .feature-icon.disabled {
+            color: rgba(228,228,228,0.3);
+        }
+
+        .plan-cta {
+            margin-top: 30px;
+        }
+
+        .plan-cta .btn {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+
+        /* Comparison Table */
+        .comparison-section {
+            padding: 100px 30px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5em;
+            font-weight: 900;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1em;
+            color: rgba(228,228,228,0.7);
+            margin-bottom: 60px;
+        }
+
+        .comparison-table {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.03);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: rgba(255,107,53,0.2);
+            padding: 20px;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .comparison-table td {
+            padding: 18px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .comparison-table tr:hover {
+            background: rgba(255,107,53,0.05);
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 100px 30px;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+            background: rgba(255,107,53,0.05);
+        }
+
+        .faq-question {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            color: rgba(228,228,228,0.8);
+            line-height: 1.7;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--darker);
+            padding: 50px 30px 30px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+        }
+
+        .footer-text {
+            color: rgba(228,228,228,0.5);
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pricing-hero h1 {
+                font-size: 2.5em;
+            }
+            
+            .pricing-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .comparison-table {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo" onclick="window.location.href='index.html'">🥓 BaconAlgo</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="index.html#features">Fonctionnalités</a></li>
+                <li><a href="pricing.html">Tarifs</a></li>
+                <li><a href="dashboard_ultimate.html">📊 Dashboard</a></li>
+                <li><a href="dashboard_ultimate.html" class="btn btn-primary">Commencer</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="pricing-hero">
+        <h1>Choisissez Votre <span>Plan</span></h1>
+        <p>
+            Tous les plans payants incluent un essai gratuit de 7 jours. 
+            Annulation en un clic avant la fin de l'essai. Disponible en CAD et USD.
+        </p>
+        
+        <div class="hero-features">
+            <div class="hero-feature">
+                <span class="checkmark">✓</span> Sans carte bancaire pour l'essai gratuit
+            </div>
+            <div class="hero-feature">
+                <span class="checkmark">✓</span> Annulation en un clic
+            </div>
+            <div class="hero-feature">
+                <span class="checkmark">✓</span> Disponible en CAD et USD
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Cards -->
+    <div class="pricing-container">
+        <!-- Free Plan -->
+        <div class="pricing-card">
+            <div class="plan-name">🆓 Free / Donation</div>
+            <div class="plan-description">
+                Parfait pour tester la plateforme et découvrir les bases
+            </div>
+            
+            <div class="plan-price">
+                Gratuit
+                <span>ou donation</span>
+            </div>
+            
+            <ul class="plan-features">
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Indicateurs propriétaires</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Scanner multi-marchés</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Station Auto-Trade IB</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Accès communauté Discord</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Backtests publics</span>
+                </li>
+            </ul>
+            
+            <div class="plan-cta">
+                <a href="dashboard_ultimate.html" class="btn btn-primary">
+                    Commencer Gratuitement
+                </a>
+            </div>
+        </div>
+
+        <!-- Indicator Plan -->
+        <div class="pricing-card">
+            <div class="plan-name">📊 Bacon Indicator</div>
+            <div class="plan-description">
+                Indicateurs propriétaires pour TradingView, MT5 et la Station
+            </div>
+            
+            <div class="plan-price">
+                20$
+                <span>/mois</span>
+            </div>
+            
+            <div class="trial-notice">
+                ✅ Inclut un essai gratuit de 7 jours
+            </div>
+            
+            <ul class="plan-features">
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Tous les indicateurs propriétaires</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Compatible TradingView & MT5</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>AVWAP Multi-Timeframe</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Smart Money Concepts</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Scanner en temps réel</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Auto-Trade Station</span>
+                </li>
+            </ul>
+            
+            <div class="plan-cta">
+                <a href="dashboard_ultimate.html" class="btn btn-primary">
+                    Essayer 7 Jours Gratuits
+                </a>
+            </div>
+        </div>
+
+        <!-- Scanner Plan -->
+        <div class="pricing-card">
+            <div class="plan-name">🔍 Bacon Scanner</div>
+            <div class="plan-description">
+                Scanner multi-marchés avec signaux en temps réel
+            </div>
+            
+            <div class="plan-price">
+                30$
+                <span>/mois</span>
+            </div>
+            
+            <div class="trial-notice">
+                ✅ Inclut un essai gratuit de 7 jours
+            </div>
+            
+            <ul class="plan-features">
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Scanner multi-marchés complet</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>US Stocks + Canadian + Futures + Crypto</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Signaux avec confluences (96%+)</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Alertes Discord & Mobile</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Backtests détaillés</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Indicateurs propriétaires</span>
+                </li>
+                <li>
+                    <span class="feature-icon disabled">✗</span>
+                    <span>Auto-Trade Station</span>
+                </li>
+            </ul>
+            
+            <div class="plan-cta">
+                <a href="dashboard_ultimate.html" class="btn btn-primary">
+                    Essayer 7 Jours Gratuits
+                </a>
+            </div>
+        </div>
+
+        <!-- Station Plan (Featured) -->
+        <div class="pricing-card featured">
+            <div class="featured-badge">🔥 PLUS POPULAIRE</div>
+            
+            <div class="plan-name">🚀 Bacon Station IB</div>
+            <div class="plan-description">
+                Package complet : Indicateurs + Scanner + Auto-Trade
+            </div>
+            
+            <div class="plan-price">
+                50$
+                <span>/mois</span>
+            </div>
+            
+            <div class="trial-notice">
+                ✅ Inclut un essai gratuit de 7 jours
+            </div>
+            
+            <ul class="plan-features">
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span><strong>Tous les indicateurs propriétaires</strong></span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span><strong>Scanner multi-marchés complet</strong></span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span><strong>Station Auto-Trade IB + Bitget</strong></span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Exécution automatique des signaux</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Machine Learning (LSTM + Random Forest)</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Order Flow Analysis avancée</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Backtests illimités</span>
+                </li>
+                <li>
+                    <span class="feature-icon">✓</span>
+                    <span>Support prioritaire</span>
+                </li>
+            </ul>
+            
+            <div class="plan-cta">
+                <a href="dashboard_ultimate.html" class="btn btn-primary">
+                    Essayer 7 Jours Gratuits
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <section class="comparison-section">
+        <h2 class="section-title">Tableau Comparatif</h2>
+        <p class="section-subtitle">
+            Comparez les fonctionnalités de chaque plan pour choisir celui qui vous convient
+        </p>
+        
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="text-align: left;">Fonctionnalité</th>
+                        <th>Free</th>
+                        <th>Indicator</th>
+                        <th>Scanner</th>
+                        <th>Station IB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: left; font-weight: 600;">Prix (USD/mois)</td>
+                        <td>Gratuit</td>
+                        <td>20$</td>
+                        <td>30$</td>
+                        <td>50$</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Essai gratuit 7 jours</td>
+                        <td>-</td>
+                        <td style="color: var(--success);">✓</td>
+                        <td style="color: var(--success);">✓</td>
+                        <td style="color: var(--success);">✓</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Indicateurs propriétaires</td>
+                        <td>✗</td>
+                        <td style="color: var(--success);">✓</td>
+                        <td>✗</td>
+                        <td style="color: var(--success);">✓</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Scanner multi-marchés</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td style="color: var(--success);">✓</td>
+                        <td style="color: var(--success);">✓</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Station Auto-Trade IB</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td style="color: var(--success);">✓</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Alertes Discord/Mobile</td>
+                        <td>Limitées</td>
+                        <td>✗</td>
+                        <td style="color: var(--success);">✓</td>
+                        <td style="color: var(--success);">✓</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Machine Learning</td>
+                        <td>✗</td>
+                        <td>✗</td>
+                        <td>Basique</td>
+                        <td style="color: var(--success);">Complet</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left;">Support</td>
+                        <td>Communauté</td>
+                        <td>Email</td>
+                        <td>Email</td>
+                        <td style="color: var(--success);">Prioritaire</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <p style="text-align: center; margin-top: 40px; color: rgba(228,228,228,0.7);">
+            <strong>Note:</strong> La Station Auto-Trade IB inclut l'indicateur + le scanner, c'est le package complet.
+        </p>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <h2 class="section-title">Questions Fréquentes</h2>
+        <p class="section-subtitle">
+            Vous avez des questions ? Nous avons les réponses.
+        </p>
+        
+        <div class="faq-container">
+            <div class="faq-item">
+                <div class="faq-question">
+                    Puis-je annuler mon essai gratuit ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Oui, vous pouvez annuler en un clic depuis votre compte. Si vous annulez avant 
+                    la fin des 7 jours, vous ne serez jamais facturé.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Que se passe-t-il après les 7 jours ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Si vous ne faites rien, l'abonnement se poursuit automatiquement au tarif mensuel 
+                    choisi (CAD ou USD). Vous pouvez annuler à tout moment.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Puis-je changer de plan ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Oui, vous pouvez passer d'un plan à l'autre à tout moment depuis votre compte. 
+                    Le changement est immédiat.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Les prix sont en USD ou CAD ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Vous choisissez la devise lors de l'inscription. Les deux devises sont acceptées.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Comment fonctionne l'Auto-Trade avec IB ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    La Bacon Station Auto-Trade est conçue pour fonctionner avec Interactive Brokers (IB). 
+                    Vous pouvez aussi tester en mode démo sans connecter de compte réel.
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    Les indicateurs sont compatibles MT5 ?
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Oui, le Bacon Buy & Sell Indicator est compatible MT5, TradingView et la Station BaconAlgo.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="logo" style="margin-bottom: 25px;">🥓 BaconAlgo</div>
+        <p class="footer-text">
+            © 2025 BaconAlgo Saint-Graal. Construit par des traders, pour des traders. 🥓<br>
+            <a href="index.html" style="color: var(--primary); text-decoration: none;">Accueil</a> · 
+            <a href="dashboard_ultimate.html" style="color: var(--primary); text-decoration: none;">Dashboard</a> · 
+            <a href="#" style="color: var(--primary); text-decoration: none;">Contact</a>
+        </p>
+    </footer>
+
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
