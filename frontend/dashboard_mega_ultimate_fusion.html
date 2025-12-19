@@ -1574,7 +1574,7 @@
     </div>
 
     <script>
-        const API_URL = 'http://localhost:5000';
+        const API_URL = 'https://baconalgo-api-x1m8.onrender.com';
 
         // IBKR Functions
         function connectIBKR() {
@@ -1612,7 +1612,7 @@
                 await fetch(`${API_URL}/api/scanner/start`, { method: 'POST' });
                 alert('🚀 Scanner started!');
             } catch (error) {
-                alert('⚠️ Make sure API is running on http://localhost:5000');
+                alert('⚠️ Make sure API is running on https://baconalgo-api-x1m8.onrender.com');
             }
         }
 
