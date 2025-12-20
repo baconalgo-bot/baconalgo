@@ -17,12 +17,32 @@ app = FastAPI(title="🥓 BaconAlgo API", version="3.0.0")
 # CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "http://127.0.0.1:3000",
+        "http://127.0.0.1:5173",
+        "https://www.baconalgo.com",
+        "https://baconalgo.com",
+        "https://baconalgo.vercel.app",  # Si tu utilises Vercel
+        "https://baconalgo.netlify.app",  # Si tu utilises Netlify
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {
+        "message": "🥓 BaconAlgo API",
+        "status": "online",
+        "version": "1.0.0"
+    }
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "service": "BaconAlgo API"}
 # ============================================
 # DISCORD WEBHOOK CONFIGURATION
 # ============================================
