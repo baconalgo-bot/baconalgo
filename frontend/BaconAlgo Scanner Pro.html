@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaconAlgo Scanner Pro - Signaux Trading en Temps Réel</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #00d4ff;
+            --primary-dark: #0099ff;
+            --bg-dark: #0f1419;
+            --bg-card: #1a1f2e;
+            --bg-hover: #242a38;
+            --border: #2a3042;
+            --text-primary: #e4e8eb;
+            --text-secondary: #b0b8c1;
+            --success: #4ade80;
+            --danger: #ff4a4a;
+            --warning: #fbbf24;
+            --info: #8b5cf6;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-dark) 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .mode-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--border);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        .mode-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* FILTERS PANEL */
+        .filters-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            align-items: flex-end;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            padding: 0.7rem 1rem;
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+        
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(0, 212, 255, 0.2);
+        }
+        
+        .btn-search {
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+        
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* STATS BAR */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.3rem;
+        }
+        
+        /* SIGNALS TABLE */
+        .signals-wrapper {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .signals-header {
+            background: var(--bg-hover);
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .signals-header h2 {
+            font-size: 1.3rem;
+        }
+        
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .signals-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .signals-table th {
+            background: var(--bg-hover);
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .signals-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .signals-table tbody tr:hover {
+            background: var(--bg-hover);
+        }
+        
+        /* RATING BADGES */
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-weight: 600;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+        
+        .rating.strong-buy {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
+        }
+        
+        .rating.buy {
+            background: rgba(74, 222, 128, 0.1);
+            color: var(--success);
+        }
+        
+        .rating.hold {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--warning);
+        }
+        
+        .rating.sell {
+            background: rgba(255, 74, 74, 0.1);
+            color: var(--danger);
+        }
+        
+        .rating.strong-sell {
+            background: rgba(255, 74, 74, 0.15);
+            color: var(--danger);
+        }
+        
+        /* SCORE BADGE */
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .score-bar {
+            width: 60px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        
+        .score-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+            transition: width 0.3s;
+        }
+        
+        /* SYMBOL */
+        .symbol {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.1rem;
+            min-width: 80px;
+        }
+        
+        .timeframe {
+            background: var(--border);
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: 0.5rem;
+        }
+        
+        /* TYPE BADGE */
+        .type-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .type-scalp {
+            background: rgba(0, 212, 255, 0.15);
+            color: var(--primary);
+        }
+        
+        .type-day {
+            background: rgba(251, 191, 36, 0.15);
+            color: var(--warning);
+        }
+        
+        .type-swing {
+            background: rgba(139, 92, 246, 0.15);
+            color: var(--info);
+        }
+        
+        .type-position {
+            background: rgba(74, 222, 128, 0.15);
+            color: var(--success);
+        }
+        
+        /* PRICE */
+        .price-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+        
+        .price-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        
+        .price-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tp-level {
+            font-size: 0.8rem;
+            color: var(--success);
+        }
+        
+        .sl-level {
+            font-size: 0.8rem;
+            color: var(--danger);
+        }
+        
+        .rr-ratio {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+        
+        /* SIGNAL DETAIL */
+        .signal-detail {
+            cursor: pointer;
+            color: var(--primary);
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .signal-detail:hover {
+            text-decoration: underline;
+        }
+        
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .modal-close:hover {
+            color: var(--primary);
+        }
+        
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .detail-section h3 {
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            background: var(--bg-dark);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        .detail-item-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        
+        .detail-item-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        /* EMPTY STATE */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .filters-panel {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .mode-selector {
+                width: 100%;
+            }
+            
+            .filters-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .signals-table {
+                font-size: 0.85rem;
+            }
+            
+            .signals-table th,
+            .signals-table td {
+                padding: 0.7rem;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="header-content">
+            <div class="logo">🥓 BaconAlgo Scanner Pro</div>
+            <div class="mode-selector">
+                <button class="mode-btn active" onclick="setMode('scan')">📊 Scanner</button>
+                <button class="mode-btn" onclick="setMode('ib')">🏦 IB Paper</button>
+                <button class="mode-btn" onclick="setMode('live')">⚡ IB Live</button>
+                <button class="mode-btn" onclick="setMode('bitget')">🪙 BitGet</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <div class="container">
+        <!-- FILTERS -->
+        <div class="filters-panel">
+            <div class="filter-group">
+                <label>🎯 Style de Trading</label>
+                <select id="trading-style" onchange="applyFilters()">
+                    <option value="">Tous les Styles</option>
+                    <option value="scalp">Scalp (25pts)</option>
+                    <option value="day">Day Trading (50pts)</option>
+                    <option value="swing">Swing (100pts)</option>
+                    <option value="position">Position Long (250pts)</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>💎 Rating</label>
+                <select id="rating-filter" onchange="applyFilters()">
+                    <option value="">Tous les Ratings</option>
+                    <option value="strong-buy">Strong Buy 🟢🟢</option>
+                    <option value="buy">Buy 🟢</option>
+                    <option value="hold">Hold 🟡</option>
+                    <option value="sell">Sell 🔴</option>
+                    <option value="strong-sell">Strong Sell 🔴🔴</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>🔧 Filtre Technique</label>
+                <select id="tech-filter" onchange="applyFilters()">
+                    <option value="">Tous</option>
+                    <option value="orb5">ORB5 Breakout</option>
+                    <option value="orb15">ORB15 Breakout</option>
+                    <option value="setup80">80% Setup</option>
+                    <option value="fvg">Fair Value Gap</option>
+                    <option value="ob">Order Block</option>
+                    <option value="vwap">VWAP Cross</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>📊 Score Minimum</label>
+                <input type="range" id="min-score" min="0" max="300" value="50" onchange="applyFilters()">
+                <div style="font-size: 0.8rem; color: var(--primary); margin-top: 0.3rem;">
+                    <span id="score-display">50</span>/300
+                </div>
+            </div>
+            
+            <button class="btn-search" onclick="applyFilters()">🔍 Rechercher</button>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-bar">
+            <div class="stat-badge">
+                <div class="stat-value" id="total-found">0</div>
+                <div class="stat-label">Signaux Trouvés</div>
+            </div>
+            <div class="stat-badge">
+                <div class="stat-value" id="strong-buy-count">0</div>
+                <div class="stat-label">Strong Buy</div>
+            </div>
+            <div class="stat-badge">
+                <div class="stat-value" id="buy-count">0</div>
+                <div class="stat-label">Buy</div>
+            </div>
+            <div class="stat-badge">
+                <div class="stat-value" id="avg-score-display">0</div>
+                <div class="stat-label">Score Moyen</div>
+            </div>
+        </div>
+
+        <!-- SIGNALS TABLE -->
+        <div class="signals-wrapper">
+            <div class="signals-header">
+                <h2>🏆 Signaux Premium</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="signals-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Symbole</th>
+                            <th>Style</th>
+                            <th>Rating</th>
+                            <th>Score</th>
+                            <th>Entrée</th>
+                            <th>TP1 | TP2 | TP3</th>
+                            <th>Stop Loss</th>
+                            <th>R:R</th>
+                            <th>Détails</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="signals-tbody">
+                        <tr>
+                            <td colspan="11" class="empty-state">
+                                <div class="empty-state-icon">📊</div>
+                                <p>Aucun signal trouvé. Ajustez vos filtres ou attendez les prochains mouvements du marché.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL MODAL -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-symbol">TSLA</div>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <div class="detail-section">
+                <h3>📍 Analyse Technique</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-item-label">Résistance</div>
+                        <div class="detail-item-value" id="modal-resistance">$320.50</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">Support</div>
+                        <div class="detail-item-value" id="modal-support">$310.20</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">80% Setup</div>
+                        <div class="detail-item-value" id="modal-setup">Oui ✓</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">Vague Elliott</div>
+                        <div class="detail-item-value" id="modal-wave">Wave 3</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>🎯 Niveaux d'Entrée</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-item-label">Entrée Primaire</div>
+                        <div class="detail-item-value" id="modal-entry">$312.45</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">Entrée Alternative</div>
+                        <div class="detail-item-value" id="modal-entry-alt">$310.80</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>🎁 Niveaux de Profit</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-item-label">TP1 (3%)</div>
+                        <div class="detail-item-value" id="modal-tp1">$321.95</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">TP2 (5%)</div>
+                        <div class="detail-item-value" id="modal-tp2">$327.97</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">TP3 (8%)</div>
+                        <div class="detail-item-value" id="modal-tp3">$337.45</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>🛑 Gestion du Risque</h3>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-item-label">Stop Loss</div>
+                        <div class="detail-item-value" id="modal-sl">$305.60</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">Risk:Reward</div>
+                        <div class="detail-item-value" id="modal-rr">2.8:1</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-item-label">Confluence</div>
+                        <div class="detail-item-value" id="modal-confluence">94%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h3>📈 Description du Signal</h3>
+                <p id="modal-description" style="color: var(--text-secondary); line-height: 1.6;">
+                    Signal de qualité LEGENDARY basé sur une confluence de 94% incluant ORB5, VWAP, FVG et Order Block. 
+                    Breakout confirmé sur la journée avec volume élevé. Structure haussière intacte sur le timeframe daily.
+                </p>
+            </div>
+
+            <div class="detail-section">
+                <h3>🔌 TradingView Indicator</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                    📊 Utilise l'indicateur BaconAlgo disponible sur TradingView pour plus de détails et monitoring en temps réel.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/supabase@2/dist/module.min.js"></script>
+    <script>
+        // Configuration
+        const SUPABASE_URL = 'https://vnscwjgaboiefxjlosbp.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_0w0MQ6806XKHviOHgVKmfA_eE98keEZ';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Load signals from Supabase
+        async function loadSignalsFromSupabase() {
+            try {
+                const { data, error } = await supabase
+                    .from('signals')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+                
+                if (error) throw error;
+                
+                if (data && data.length > 0) {
+                    allSignals = data;
+                    applyFilters();
+                    console.log('✅ Signaux chargés depuis Supabase:', allSignals.length);
+                } else {
+                    console.log('⚠️ Aucun signal dans Supabase, utilisation des données sample');
+                    allSignals = sampleSignals;
+                    applyFilters();
+                }
+            } catch (error) {
+                console.error('❌ Erreur Supabase:', error);
+                console.log('📊 Basculement sur les données sample');
+                allSignals = sampleSignals;
+                applyFilters();
+            }
+        }
+        
+        let currentMode = 'scan';
+        let allSignals = [];
+        
+        // Sample Signals (Replace with Supabase)
+        const sampleSignals = [
+            {
+                id: 1,
+                symbol: 'TSLA',
+                timeframe: '1d',
+                style: 'day',
+                rating: 'strong-buy',
+                score: 280,
+                entry: 312.45,
+                tp1: 321.95,
+                tp2: 327.97,
+                tp3: 337.45,
+                sl: 305.60,
+                rr: 2.8,
+                resistance: 320.50,
+                support: 310.20,
+                setup: 'ORB5, VWAP, FVG',
+                wave: 'Wave 3',
+                confluence: 94
+            },
+            {
+                id: 2,
+                symbol: 'NVDA',
+                timeframe: '4h',
+                style: 'scalp',
+                rating: 'buy',
+                score: 220,
+                entry: 145.30,
+                tp1: 149.76,
+                tp2: 154.67,
+                tp3: 161.23,
+                sl: 140.50,
+                rr: 2.2,
+                resistance: 150.00,
+                support: 142.80,
+                setup: 'ORB15, Order Block',
+                wave: 'Wave 1-2',
+                confluence: 87
+            },
+            {
+                id: 3,
+                symbol: 'QQQ',
+                timeframe: '1d',
+                style: 'swing',
+                rating: 'hold',
+                score: 180,
+                entry: 513.62,
+                tp1: 529.03,
+                tp2: 548.88,
+                tp3: 577.30,
+                sl: 490.00,
+                rr: 1.8,
+                resistance: 525.00,
+                support: 505.00,
+                setup: 'VWAP, 80% Setup',
+                wave: 'Wave 2',
+                confluence: 81
+            }
+        ];
+        
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let modeText = '';
+            switch(mode) {
+                case 'scan': modeText = 'Scanner Mode'; break;
+                case 'ib': modeText = 'IB Paper Trading'; break;
+                case 'live': modeText = 'IB Live Trading'; break;
+                case 'bitget': modeText = 'BitGet Trading'; break;
+            }
+            console.log('Mode:', modeText);
+        }
+        
+        function applyFilters() {
+            const style = document.getElementById('trading-style').value;
+            const rating = document.getElementById('rating-filter').value;
+            const tech = document.getElementById('tech-filter').value;
+            const minScore = parseInt(document.getElementById('min-score').value);
+            
+            document.getElementById('score-display').textContent = minScore;
+            
+            let filtered = sampleSignals.filter(s =>
+                (!style || s.style === style) &&
+                (!rating || s.rating === rating) &&
+                s.score >= minScore
+            );
+            
+            renderSignals(filtered);
+            updateStats(filtered);
+        }
+        
+        function renderSignals(signals) {
+            const tbody = document.getElementById('signals-tbody');
+            
+            if (signals.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="11" class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <p>Aucun signal trouvé. Ajustez vos filtres ou attendez les prochains mouvements du marché.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = signals.map((s, i) => {
+                const ratingClass = s.rating.replace('-', '-');
+                const ratingEmoji = {
+                    'strong-buy': '🟢🟢',
+                    'buy': '🟢',
+                    'hold': '🟡',
+                    'sell': '🔴',
+                    'strong-sell': '🔴🔴'
+                }[s.rating];
+                
+                const styleClass = `type-${s.style}`;
+                const styleText = {
+                    'scalp': 'SCALP (25)',
+                    'day': 'DAY (50)',
+                    'swing': 'SWING (100)',
+                    'position': 'POSITION (250)'
+                }[s.style];
+                
+                return `
+                    <tr>
+                        <td>#${i + 1}</td>
+                        <td><span class="symbol">${s.symbol}</span><span class="timeframe">[${s.timeframe}]</span></td>
+                        <td><span class="type-badge ${styleClass}">${styleText}</span></td>
+                        <td><span class="rating ${s.rating}">${ratingEmoji}</span></td>
+                        <td>
+                            <div class="score-badge">
+                                <span>${s.score}</span>
+                                <div class="score-bar">
+                                    <div class="score-fill" style="width: ${(s.score/300)*100}%"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td><div class="price-cell"><div class="price-value">$${s.entry.toFixed(2)}</div></div></td>
+                        <td>
+                            <div class="price-cell">
+                                <div class="tp-level">$${s.tp1.toFixed(2)}</div>
+                                <div class="tp-level">$${s.tp2.toFixed(2)}</div>
+                                <div class="tp-level">$${s.tp3.toFixed(2)}</div>
+                            </div>
+                        </td>
+                        <td><div class="price-cell"><div class="sl-level">$${s.sl.toFixed(2)}</div></div></td>
+                        <td><div class="rr-ratio">${s.rr}:1</div></td>
+                        <td><a class="signal-detail" onclick="openModal(${s.id})">Voir Plus</a></td>
+                        <td>
+                            <button class="btn-search" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="tradSignal(${s.id})">Trade</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+        
+        function updateStats(signals) {
+            const strongBuy = signals.filter(s => s.rating === 'strong-buy').length;
+            const buy = signals.filter(s => s.rating === 'buy').length;
+            const avgScore = Math.round(signals.reduce((a, b) => a + b.score, 0) / signals.length) || 0;
+            
+            document.getElementById('total-found').textContent = signals.length;
+            document.getElementById('strong-buy-count').textContent = strongBuy;
+            document.getElementById('buy-count').textContent = buy;
+            document.getElementById('avg-score-display').textContent = avgScore;
+        }
+        
+        function openModal(id) {
+            const signal = sampleSignals.find(s => s.id === id);
+            if (!signal) return;
+            
+            document.getElementById('modal-symbol').textContent = signal.symbol;
+            document.getElementById('modal-resistance').textContent = `$${signal.resistance.toFixed(2)}`;
+            document.getElementById('modal-support').textContent = `$${signal.support.toFixed(2)}`;
+            document.getElementById('modal-setup').textContent = signal.setup;
+            document.getElementById('modal-wave').textContent = signal.wave;
+            document.getElementById('modal-entry').textContent = `$${signal.entry.toFixed(2)}`;
+            document.getElementById('modal-entry-alt').textContent = `$${(signal.entry - 1.65).toFixed(2)}`;
+            document.getElementById('modal-tp1').textContent = `$${signal.tp1.toFixed(2)}`;
+            document.getElementById('modal-tp2').textContent = `$${signal.tp2.toFixed(2)}`;
+            document.getElementById('modal-tp3').textContent = `$${signal.tp3.toFixed(2)}`;
+            document.getElementById('modal-sl').textContent = `$${signal.sl.toFixed(2)}`;
+            document.getElementById('modal-rr').textContent = `${signal.rr}:1`;
+            document.getElementById('modal-confluence').textContent = `${signal.confluence}%`;
+            
+            document.getElementById('detail-modal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.remove('active');
+        }
+        
+        function tradSignal(id) {
+            alert(`Trading signal ${id} via ${currentMode.toUpperCase()}\n\nIntégration complète IB/Bitget: Prochainement!`);
+        }
+        
+        // Real-time Updates from Supabase
+        function setupRealtimeUpdates() {
+            supabase
+                .channel('signals-channel')
+                .on('postgres_changes', 
+                    { event: '*', schema: 'public', table: 'signals' },
+                    (payload) => {
+                        console.log('🔄 Mise à jour détectée:', payload);
+                        loadSignalsFromSupabase();
+                    }
+                )
+                .subscribe();
+        }
+        
+        // Init
+        loadSignalsFromSupabase();
+        setupRealtimeUpdates();
+    </script>
+</body>
+</html>
