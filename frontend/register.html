@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaconAlgo - Connexion</title>
+    <title>BaconAlgo - Créer un Compte</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥓</text></svg>">
     
     <style>
@@ -124,7 +124,7 @@
 
         .card {
             width: 100%;
-            max-width: 450px;
+            max-width: 500px;
             background: var(--card-bg);
             border: 2px solid var(--border);
             border-radius: 20px;
@@ -144,14 +144,8 @@
         }
 
         .logo-big {
-            font-size: 3.5em;
+            font-size: 3em;
             margin-bottom: 10px;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
 
         .title {
@@ -202,46 +196,73 @@
             color: var(--text-secondary);
         }
 
-        .remember-forgot {
+        .password-strength {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .password-strength.weak {
+            display: block;
+            background: rgba(248, 81, 73, 0.2);
+            color: #ff6b9d;
+            border: 1px solid rgba(248, 81, 73, 0.3);
+        }
+
+        .password-strength.medium {
+            display: block;
+            background: rgba(255, 159, 64, 0.2);
+            color: #ffb366;
+            border: 1px solid rgba(255, 159, 64, 0.3);
+        }
+
+        .password-strength.strong {
+            display: block;
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--success);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .terms-checkbox {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            gap: 10px;
             margin-bottom: 24px;
             font-size: 0.9em;
         }
 
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .remember-me input {
+        .terms-checkbox input {
             width: 18px;
             height: 18px;
             cursor: pointer;
             accent-color: var(--primary);
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
-        .remember-me label {
+        .terms-checkbox label {
             margin: 0;
             cursor: pointer;
             color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .forgot-password {
+        .terms-checkbox a {
             color: var(--primary);
             text-decoration: none;
-            transition: all 0.3s;
+            transition: color 0.3s;
             font-weight: 600;
         }
 
-        .forgot-password:hover {
+        .terms-checkbox a:hover {
             color: var(--secondary);
             text-decoration: underline;
         }
 
-        .btn-login {
+        .btn-register {
             width: 100%;
             padding: 16px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -256,86 +277,34 @@
             box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
         }
 
-        .btn-login:hover {
+        .btn-register:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
         }
 
-        .btn-login:active {
+        .btn-register:active {
             transform: translateY(0);
         }
 
-        .btn-login:disabled {
+        .btn-register:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            margin: 30px 0;
-            color: var(--text-secondary);
-            font-size: 0.85em;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .divider::before {
-            margin-right: 12px;
-        }
-
-        .divider::after {
-            margin-left: 12px;
-        }
-
-        .social-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .btn-social {
-            padding: 14px;
-            background: var(--dark);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 0.9em;
-            font-weight: 600;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-social:hover {
-            background: rgba(255, 107, 53, 0.1);
-            border-color: var(--primary);
-        }
-
-        .signup-link {
+        .login-link {
             text-align: center;
             color: var(--text-secondary);
             font-size: 0.9em;
         }
 
-        .signup-link a {
+        .login-link a {
             color: var(--primary);
             text-decoration: none;
             font-weight: 700;
             transition: color 0.3s;
         }
 
-        .signup-link a:hover {
+        .login-link a:hover {
             color: var(--secondary);
         }
 
@@ -371,10 +340,6 @@
             .title {
                 font-size: 1.6em;
             }
-
-            .social-buttons {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
@@ -402,21 +367,43 @@
         <div class="card">
             <div class="header">
                 <div class="logo-big">🥓</div>
-                <h1 class="title">Connexion</h1>
-                <p class="subtitle">Bienvenue à la Station BaconAlgo</p>
+                <h1 class="title">Créer un Compte</h1>
+                <p class="subtitle">Rejoins la Station BaconAlgo</p>
             </div>
 
             <div class="error" id="error-msg"></div>
             <div class="success" id="success-msg"></div>
 
-            <form id="loginForm" onsubmit="handleLogin(event)">
+            <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
-                    <label for="email">Email ou Nom d'utilisateur</label>
+                    <label for="fullname">Nom Complet</label>
                     <input 
                         type="text" 
+                        id="fullname" 
+                        name="fullname" 
+                        placeholder="Jean Dupont" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
                         id="email" 
                         name="email" 
                         placeholder="jean@example.com" 
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Nom d'utilisateur</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="bacontrader" 
                         required
                     >
                 </div>
@@ -429,46 +416,84 @@
                         name="password" 
                         placeholder="••••••••" 
                         required
+                        onkeyup="checkPasswordStrength(this.value)"
+                    >
+                    <div id="strengthBar" class="password-strength">
+                        Faible - Minimum 8 caractères
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirmer le mot de passe</label>
+                    <input 
+                        type="password" 
+                        id="confirm-password" 
+                        name="confirm-password" 
+                        placeholder="••••••••" 
+                        required
                     >
                 </div>
 
-                <div class="remember-forgot">
-                    <div class="remember-me">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Se souvenir de moi</label>
-                    </div>
-                    <a href="#" class="forgot-password">Mot de passe oublié?</a>
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" name="terms" required>
+                    <label for="terms">
+                        J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a>
+                    </label>
                 </div>
 
-                <button type="submit" class="btn-login" id="submitBtn">
-                    Se Connecter
+                <button type="submit" class="btn-register" id="submitBtn">
+                    Créer mon Compte
                 </button>
             </form>
 
-            <div class="divider">Ou continuer avec</div>
-
-            <div class="social-buttons">
-                <button class="btn-social" onclick="loginWithGoogle()">
-                    🔵 Google
-                </button>
-                <button class="btn-social" onclick="loginWithGithub()">
-                    ⚫ GitHub
-                </button>
-            </div>
-
-            <p class="signup-link">
-                Pas encore de compte? <a href="register.html">S'inscrire</a>
+            <p class="login-link">
+                Déjà un compte? <a href="login.html">Se connecter</a>
             </p>
         </div>
     </div>
 
     <script>
-        function handleLogin(event) {
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strengthBar');
+            
+            if (!password) {
+                strengthBar.style.display = 'none';
+                return;
+            }
+
+            let strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+            strengthBar.className = 'password-strength';
+            strengthBar.style.display = 'block';
+
+            if (strength < 3) {
+                strengthBar.classList.add('weak');
+                strengthBar.textContent = '🔴 Faible - Ajoutez plus de caractères variés';
+            } else if (strength < 5) {
+                strengthBar.classList.add('medium');
+                strengthBar.textContent = '🟡 Moyen - Bon, mais pourrait être plus fort';
+            } else {
+                strengthBar.classList.add('strong');
+                strengthBar.textContent = '🟢 Fort - Excellent mot de passe!';
+            }
+        }
+
+        function handleRegister(event) {
             event.preventDefault();
 
+            const fullname = document.getElementById('fullname').value;
             const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const terms = document.getElementById('terms').checked;
             const errorDiv = document.getElementById('error-msg');
             const successDiv = document.getElementById('success-msg');
             const submitBtn = document.getElementById('submitBtn');
@@ -477,37 +502,40 @@
             errorDiv.style.display = 'none';
             successDiv.style.display = 'none';
 
-            if (!email || !password) {
-                showError('Veuillez remplir tous les champs');
+            // Validation
+            if (!terms) {
+                showError('Vous devez accepter les conditions d\'utilisation');
                 return;
             }
 
-            submitBtn.disabled = true;
-            submitBtn.textContent = '⏳ Connexion...';
+            if (password !== confirmPassword) {
+                showError('Les mots de passe ne correspondent pas');
+                return;
+            }
 
-            // Simulate login (replace with real backend call)
+            if (password.length < 8) {
+                showError('Le mot de passe doit contenir au moins 8 caractères');
+                return;
+            }
+
+            // Simulate registration (replace with real backend call)
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Création en cours...';
+
             setTimeout(() => {
-                // In production:
-                // fetch('https://baconalgo-api-x1m8.onrender.com/api/auth/login', {
+                // In production, send to backend:
+                // fetch('https://baconalgo-api-x1m8.onrender.com/api/auth/register', {
                 //     method: 'POST',
                 //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify({ email, password, remember })
+                //     body: JSON.stringify({ fullname, email, username, password })
                 // })
 
-                if (remember) {
-                    localStorage.setItem('baconAlgoUser', JSON.stringify({
-                        email: email,
-                        name: 'Jean Dupont',
-                        plan: 'pro'
-                    }));
-                }
-
                 successDiv.style.display = 'block';
-                successDiv.textContent = `✅ Connexion réussie! Redirection...`;
+                successDiv.textContent = `✅ Bienvenue ${fullname}! Redirection vers la connexion...`;
                 
                 setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                    window.location.href = 'login.html';
+                }, 2000);
             }, 1500);
         }
 
@@ -518,26 +546,8 @@
             
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Se Connecter';
+            submitBtn.textContent = 'Créer mon Compte';
         }
-
-        function loginWithGoogle() {
-            alert('🔵 Intégration Google OAuth en cours...\n\nCette fonctionnalité sera disponible bientôt!');
-        }
-
-        function loginWithGithub() {
-            alert('⚫ Intégration GitHub OAuth en cours...\n\nCette fonctionnalité sera disponible bientôt!');
-        }
-
-        // Load saved email if exists
-        window.addEventListener('load', () => {
-            const savedUser = localStorage.getItem('baconAlgoUser');
-            if (savedUser) {
-                const user = JSON.parse(savedUser);
-                document.getElementById('email').value = user.email || '';
-                document.getElementById('remember').checked = true;
-            }
-        });
     </script>
 </body>
 </html>
