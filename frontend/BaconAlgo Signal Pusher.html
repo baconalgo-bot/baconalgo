@@ -1,0 +1,198 @@
+"""
+🥓 BaconAlgo Signal Pusher to Supabase
+Auto-push trading signals from your scanner to Supabase in real-time
+"""
+
+import os
+from datetime import datetime
+from supabase import create_client, Client
+import json
+
+# Configuration
+SUPABASE_URL = "https://vnscwjgaboiefxjlosbp.supabase.co"
+SUPABASE_KEY = "sb_publishable_0w0MQ6806XKHviOHgVKmfA_eE98keEZ"
+
+# Initialize Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+class BaconSignalPusher:
+    """Push trading signals to Supabase in real-time"""
+    
+    def __init__(self):
+        self.supabase = supabase
+        self.pushed_count = 0
+        
+    def push_signal(self, signal_data: dict) -> bool:
+        """
+        Push a single signal to Supabase
+        
+        Args:
+            signal_data (dict): Signal data with keys:
+                - symbol: str (e.g., 'TSLA')
+                - timeframe: str (e.g., '1d', '4h', '1h')
+                - style: str ('scalp', 'day', 'swing', 'position')
+                - rating: str ('strong-buy', 'buy', 'hold', 'sell', 'strong-sell')
+                - score: int (0-300)
+                - entry: float
+                - tp1, tp2, tp3: float (take profit levels)
+                - stop_loss: float
+                - rr: float (risk:reward ratio)
+                - resistance: float
+                - support: float
+                - setup: str (e.g., 'ORB5, VWAP, FVG')
+                - wave: str (e.g., 'Wave 3')
+                - confluence: int (0-100)
+                - description: str (detailed signal description)
+        
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        try:
+            # Prepare data for Supabase
+            payload = {
+                'symbol': signal_data.get('symbol'),
+                'timeframe': signal_data.get('timeframe'),
+                'style': signal_data.get('style'),
+                'rating': signal_data.get('rating'),
+                'score': signal_data.get('score'),
+                'entry': signal_data.get('entry'),
+                'tp1': signal_data.get('tp1'),
+                'tp2': signal_data.get('tp2'),
+                'tp3': signal_data.get('tp3'),
+                'stop_loss': signal_data.get('stop_loss'),
+                'rr': signal_data.get('rr'),
+                'resistance': signal_data.get('resistance'),
+                'support': signal_data.get('support'),
+                'setup': signal_data.get('setup'),
+                'wave': signal_data.get('wave'),
+                'confluence': signal_data.get('confluence'),
+                'description': signal_data.get('description'),
+            }
+            
+            # Insert into Supabase
+            response = self.supabase.table('signals').insert(payload).execute()
+            
+            if response.data:
+                self.pushed_count += 1
+                print(f"✅ Signal pushed: {signal_data['symbol']} @ {signal_data['entry']} | Score: {signal_data['score']}")
+                return True
+            else:
+                print(f"❌ Failed to push signal: {signal_data['symbol']}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Error pushing signal: {str(e)}")
+            return False
+    
+    def push_multiple_signals(self, signals: list) -> int:
+        """
+        Push multiple signals to Supabase
+        
+        Args:
+            signals (list): List of signal dictionaries
+        
+        Returns:
+            int: Number of successfully pushed signals
+        """
+        successful = 0
+        for signal in signals:
+            if self.push_signal(signal):
+                successful += 1
+        
+        print(f"\n📊 Pushed {successful}/{len(signals)} signals")
+        return successful
+    
+    def get_latest_signals(self, limit: int = 50) -> list:
+        """Retrieve latest signals from Supabase"""
+        try:
+            response = self.supabase.table('signals').select('*').order(
+                'created_at', ascending=False
+            ).limit(limit).execute()
+            
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"❌ Error fetching signals: {str(e)}")
+            return []
+    
+    def get_signals_by_filter(self, style: str = None, rating: str = None, min_score: int = 0) -> list:
+        """Retrieve filtered signals from Supabase"""
+        try:
+            query = self.supabase.table('signals').select('*')
+            
+            if style:
+                query = query.eq('style', style)
+            if rating:
+                query = query.eq('rating', rating)
+            
+            response = query.gte('score', min_score).order(
+                'created_at', ascending=False
+            ).execute()
+            
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"❌ Error filtering signals: {str(e)}")
+            return []
+    
+    def delete_signal(self, signal_id: int) -> bool:
+        """Delete a signal from Supabase"""
+        try:
+            self.supabase.table('signals').delete().eq('id', signal_id).execute()
+            print(f"✅ Signal {signal_id} deleted")
+            return True
+        except Exception as e:
+            print(f"❌ Error deleting signal: {str(e)}")
+            return False
+    
+    def clear_old_signals(self, days: int = 7) -> int:
+        """Clear signals older than X days"""
+        try:
+            from datetime import timedelta
+            cutoff_date = (datetime.now() - timedelta(days=days)).isoformat()
+            
+            response = self.supabase.table('signals').delete().lt(
+                'created_at', cutoff_date
+            ).execute()
+            
+            print(f"✅ Cleared signals older than {days} days")
+            return len(response.data) if response.data else 0
+        except Exception as e:
+            print(f"❌ Error clearing old signals: {str(e)}")
+            return 0
+
+
+# Example usage
+if __name__ == "__main__":
+    pusher = BaconSignalPusher()
+    
+    # Example: Push a single signal
+    sample_signal = {
+        'symbol': 'TSLA',
+        'timeframe': '1d',
+        'style': 'day',
+        'rating': 'strong-buy',
+        'score': 285,
+        'entry': 312.45,
+        'tp1': 321.95,
+        'tp2': 327.97,
+        'tp3': 337.45,
+        'stop_loss': 305.60,
+        'rr': 2.8,
+        'resistance': 320.50,
+        'support': 310.20,
+        'setup': 'ORB5, VWAP, FVG',
+        'wave': 'Wave 3',
+        'confluence': 94,
+        'description': 'LEGENDARY signal based on 94% confluence. Breakout confirmed with high volume.'
+    }
+    
+    pusher.push_signal(sample_signal)
+    
+    # Example: Get latest signals
+    signals = pusher.get_latest_signals(10)
+    print(f"\n📊 Latest signals: {len(signals)}")
+    for sig in signals:
+        print(f"  - {sig['symbol']} ({sig['style']}) @ ${sig['entry']} | {sig['rating']}")
+    
+    # Example: Filter by style and rating
+    strong_buys = pusher.get_signals_by_filter(style='day', rating='strong-buy', min_score=250)
+    print(f"\n💎 Strong Buy signals (Day): {len(strong_buys)}")
